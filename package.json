@@ -4,9 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "program": "nodemon",
-    "eslintConfig": "npm init @eslint/config"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
