@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.SERVER_PORT;
+const port = process.env.PORT || process.env.LOCAL_PORT;
 
 // Server Add-on
 app.use(helmet({
