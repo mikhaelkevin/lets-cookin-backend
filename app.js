@@ -29,6 +29,10 @@ app.use('/letscookinapps/', cors, usersRoutes);
 app.use('/letscookinapps/', cors, recipesRoutes);
 app.use('/letscookinapps/', authRoutes);
 
+app.use('*', (req, res) => {
+  res.send('Sukses');
+});
+
 // Error Handler
 app.use(errorHandler);
 
