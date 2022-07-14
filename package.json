@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "program": "nodemon",
-    "eslintConfig": "npm init @eslint/config"
+    "eslintConfig": "npm init @eslint/config",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
