@@ -18,7 +18,7 @@ const { errorHandler } = require('./app/middlewares/errorHandler');
 // const cors = require('./app/middlewares/cors');
 const cors = require('cors');
 
-const allowlist = ['https://letscookin-app.web.app'];
+const allowlist = ['https://letscookin-app.web.app', 'https://letscookin-app.herokuapp.com'];
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
