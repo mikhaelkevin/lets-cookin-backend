@@ -41,6 +41,10 @@ app.use('/letscookinapps/', cors(corsOptionsDelegate), usersRoutes);
 app.use('/letscookinapps/', cors(corsOptionsDelegate), recipesRoutes);
 app.use('/letscookinapps/', authRoutes);
 
+app.use('*', (req, res) => {
+  res.send('Sukses');
+});
+
 // Error Handler
 app.use(errorHandler);
 
