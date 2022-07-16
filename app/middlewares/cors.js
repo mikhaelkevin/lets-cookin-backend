@@ -11,4 +11,4 @@ const corsOptionsDelegate = function (req, callback) {
   callback(null, corsOptions); // callback expects two parameters: error and options
 };
 
-module.exports = cors(corsOptionsDelegate);
+module.exports = {cors(corsOptionsDelegate)};
