@@ -30,8 +30,8 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 // Routes Declaration
-app.use('./public/images', express.static('public/images'));
-app.use('./public/videos', express.static('public/videos'));
+app.use('/public/images', express.static('public/images'));
+app.use('/public/videos', express.static('public/videos'));
 const usersRoutes = require('./routes/usersRoutes');
 const recipesRoutes = require('./routes/recipesRoutes');
 const authRoutes = require('./routes/auth');
