@@ -79,13 +79,14 @@ const editUser = async (req, res) => {
 
 const addCommentToRecipe = async (req, res) => {
   const { recipeId, userId, comment } = req.body;
+  const createdAt = new Date(Date.now());
 
   await getRecipeByIdModel(recipeId);
   await getUserProfileModel(userId);
 
   if (!comment.length) throw new ErrorResponse('Please type something to post a comment!', 400);
 
-  await addCommentModel({ recipeId, userId, comment });
+  await addCommentModel({ recipeId, userId, comment, createdAt });
   res.status(200).send({ message: 'Comment has been posted!' });
 };
 module.exports = { addUser, getUsers, getUserProfile, deleteUser, editUser, addCommentToRecipe };

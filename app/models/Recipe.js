@@ -60,7 +60,8 @@ const getRecipeDetailModel = requestData => {
         db.query(
               `SELECT user_profile.user_id, user_profile.name, user_profile.profile_picture, comment.comment FROM comment
               JOIN user_profile ON comment.user_id = user_profile.user_id
-              WHERE comment.recipe_id = $1`,
+              WHERE comment.recipe_id = $1
+              ORDER BY comment.created_at`,
               [requestData],
               (_error, _result) => {
                 if (!_error) {
