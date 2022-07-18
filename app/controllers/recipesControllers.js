@@ -44,7 +44,6 @@ const getDetailRecipe = async (req, res) => {
   await getRecipeByIdModel(id);
 
   const detailRecipeResult = await getRecipeDetailModel(id);
-  console.log('detailRecipeResult', detailRecipeResult);
   if (!detailRecipeResult.userCommentary.length) {
     detailRecipeResult.userCommentary = [{ message: 'There is no comment yet on this recipe' }];
   }
