@@ -43,7 +43,8 @@ const getRecipeByIdModel = requestData => {
           recipe_picture: result.rows[0].recipe_picture,
           recipe_video: result.rows[0].recipe_video,
           user_id: result.rows[0].user_id,
-          created_at: result.rows[0].created_at
+          created_at: result.rows[0].created_at,
+          pictureId: result.rows[0].recipe_picture_id
         };
         resolve(newRecipeData);
       });
