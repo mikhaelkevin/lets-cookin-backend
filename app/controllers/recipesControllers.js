@@ -20,7 +20,6 @@ const addRecipe = async (req, res) => {
   let picturePath = requestDataMedia?.recipePicture?.map(value => value.path) ?? null;
   let pictureId;
   const videoPath = requestDataMedia?.recipeVideo?.map(value => value.path) ?? null;
-  // if (picturePath) picturePath = picturePath.toString();
 
   await getUserProfileModel(requestDataText.userId);
 
@@ -83,11 +82,18 @@ const editRecipe = async (req, res) => {
   title = title || recipeData?.title;
   ingredients = ingredients || recipeData?.ingredients;
   let picturePath = recipePicture?.map(value => value.path) || recipeData?.recipe_picture;
+  let pictureId = recipeData?.recipe_picture_id;
   const videoPath = recipeVideo?.map(value => value.path) || recipeData?.recipe_video;
 
-  if (picturePath) picturePath = picturePath.toString();
+  if (picturePath.length) {
+    await cloudinary.uploader.destroy(pictureId);
+    const cloudUpload = await cloudinary.uploader.upload(picturePath[0]);
+    picturePath = cloudUpload.secure_url;
+    pictureId = cloudUpload.public_id;
+  }
 
-  await editRecipeModel({ id, title, ingredients, picturePath, videoPath });
+  console.log('picturePath', picturePath);
+  // await editRecipeModel({ id, title, ingredients, picturePath, videoPath, pictureId });
   res.status(200).send({ message: 'Recipe has been updated!' });
 };
 

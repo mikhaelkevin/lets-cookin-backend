@@ -103,9 +103,9 @@ const editRecipeModel = requestData => {
   console.log('requestData', requestData);
   return new Promise((resolve, reject) => {
     db.query(`UPDATE recipes 
-    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4 
-    WHERE id =$5`,
-    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.id],
+    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4, recipe_picture_id=$5
+    WHERE id =$6`,
+    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.pictureId, requestData.id],
     (error, result) => {
       if (error) return reject(error);
       resolve(result.rows);
