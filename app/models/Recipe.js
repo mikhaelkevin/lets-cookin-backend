@@ -2,11 +2,11 @@ const db = require('../../configs/database');
 const { ErrorResponse } = require('../../utils/errorResponse');
 
 const addRecipeModel = (requestData) => {
-  const { requestDataText: { title, ingredients, userId }, picturePath, videoPath, createdAt } = requestData;
+  const { requestDataText: { title, ingredients, userId }, picturePath, videoPath, createdAt, pictureId } = requestData;
 
   return new Promise((resolve, reject) => {
-    db.query('INSERT INTO recipes(title,ingredients, recipe_picture , recipe_video, user_id, created_at) VALUES($1, $2, $3, $4, $5, $6) RETURNING title',
-      [title, ingredients, picturePath, videoPath, userId, createdAt],
+    db.query('INSERT INTO recipes(title,ingredients, recipe_picture , recipe_video, user_id, created_at, recipe_picture_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING title',
+      [title, ingredients, picturePath, videoPath, userId, createdAt, pictureId],
       (error, result) => {
         if (error) return reject(error);
         resolve(result.rows.length);

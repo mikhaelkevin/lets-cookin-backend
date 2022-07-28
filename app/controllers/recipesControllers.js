@@ -7,6 +7,7 @@ const {
   getRecipeDetailModel, newAddedRecipeModel, deleteRecipeModel, editRecipeModel, searchByNameModel,
   getRecipeByUserIdModel
 } = require('../models/Recipe');
+const cloudinary = require('../../utils/cloudinary');
 
 const addRecipe = async (req, res) => {
   const requestDataText = { ...req.body };
@@ -17,12 +18,21 @@ const addRecipe = async (req, res) => {
 
   const createdAt = new Date(Date.now());
   let picturePath = requestDataMedia?.recipePicture?.map(value => value.path) ?? null;
+  let pictureId;
   const videoPath = requestDataMedia?.recipeVideo?.map(value => value.path) ?? null;
-  if (picturePath) picturePath = picturePath.toString();
+  // if (picturePath) picturePath = picturePath.toString();
 
   await getUserProfileModel(requestDataText.userId);
 
-  const addRecipeResult = await addRecipeModel({ requestDataText, picturePath, videoPath, createdAt });
+  if (picturePath.length) {
+    const cloudUpload = await cloudinary.uploader.upload(picturePath[0]);
+    picturePath = cloudUpload.secure_url;
+    pictureId = cloudUpload.public_id;
+  }
+  console.log('picturePath', picturePath);
+  console.log('pictureId', pictureId);
+
+  const addRecipeResult = await addRecipeModel({ requestDataText, picturePath, pictureId, videoPath, createdAt });
   if (!addRecipeResult) throw new ErrorResponse('There is something wrong');
   res.status(200).send({ message: 'Adding recipe is success!' });
 };
