@@ -28,8 +28,6 @@ const addRecipe = async (req, res) => {
     picturePath = cloudUpload.secure_url;
     pictureId = cloudUpload.public_id;
   }
-  console.log('picturePath', picturePath);
-  console.log('pictureId', pictureId);
 
   const addRecipeResult = await addRecipeModel({ requestDataText, picturePath, pictureId, videoPath, createdAt });
   if (!addRecipeResult) throw new ErrorResponse('There is something wrong');
@@ -86,14 +84,15 @@ const editRecipe = async (req, res) => {
   const videoPath = recipeVideo?.map(value => value.path) || recipeData?.recipe_video;
 
   if (picturePath.length) {
-    await cloudinary.uploader.destroy(pictureId);
+    if (pictureId) {
+      await cloudinary.uploader.destroy(pictureId);
+    }
     const cloudUpload = await cloudinary.uploader.upload(picturePath[0]);
     picturePath = cloudUpload.secure_url;
     pictureId = cloudUpload.public_id;
   }
 
-  console.log('picturePath', picturePath);
-  // await editRecipeModel({ id, title, ingredients, picturePath, videoPath, pictureId });
+  await editRecipeModel({ id, title, ingredients, picturePath, videoPath, pictureId });
   res.status(200).send({ message: 'Recipe has been updated!' });
 };
 
