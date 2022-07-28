@@ -9,7 +9,7 @@ const { addUserModel, getUserByEmailModel, getAllUsersModel, getUserProfileModel
 const cloudinary = require('../../utils/cloudinary');
 
 const addUser = async (req, res) => {
-  console.log('req.body', req.body); const { email, phoneNumber, password, name } = req.body;
+  const { email, phoneNumber, password, name } = req.body;
 
   const mandatoryFieldIsBlank = !email || !password || !name;
   if (mandatoryFieldIsBlank) throw new ErrorResponse('Email, password and name is required. Do not leave it blank!', 400);
