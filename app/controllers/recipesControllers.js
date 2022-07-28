@@ -72,7 +72,7 @@ const deleteRecipe = async (req, res) => {
     await cloudinary.uploader.destroy(recipePicId);
   }
 
-  await deleteRecipeModel(id, recipePicId);
+  await deleteRecipeModel(id);
   res.status(200).send({ message: 'Recipe has been deleted!' });
 };
 
