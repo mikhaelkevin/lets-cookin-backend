@@ -110,7 +110,7 @@ const editRecipe = async (req, res) => {
   const videoPath =
     recipeVideo?.map((value) => value.path) || recipeData?.recipe_video;
 
-  if (picturePath.length) {
+  if (picturePath?.length) {
     if (pictureId) {
       await cloudinary.uploader.destroy(pictureId);
     }
