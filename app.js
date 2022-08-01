@@ -23,8 +23,8 @@ const cors = require('cors');
 const allowlist = [
   'https://letscookin-app.web.app',
   'http://localhost:3001',
-  'http://localhost:3000/',
-  'https://next-letscookin-apps-r6nwuwmky-mikhaelkevin.vercel.app/'
+  'http://localhost:3000',
+  'https://next-letscookin-apps-r6nwuwmky-mikhaelkevin.vercel.app'
 ];
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
