@@ -21,10 +21,7 @@ const { errorHandler } = require('./app/middlewares/errorHandler');
 const cors = require('cors');
 
 const allowlist = [
-  'https://letscookin-app.web.app',
-  'http://localhost:3001',
-  'http://localhost:3000',
-  'https://vercel.com/'
+  '*'
 ];
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
