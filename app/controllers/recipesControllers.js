@@ -102,22 +102,23 @@ const editRecipe = async (req, res) => {
 
   const recipeData = await getRecipeByIdModel(id);
 
-  title = title || recipeData?.title;
-  ingredients = ingredients || recipeData?.ingredients;
-  let picturePath =
-    recipePicture?.map((value) => value.path) || recipeData?.recipe_picture;
-  let pictureId = recipeData?.recipe_picture_id;
+  let picturePath = recipePicture?.[0]?.path;
+  let pictureId = recipeData?.pictureId;
   const videoPath =
     recipeVideo?.map((value) => value.path) || recipeData?.recipe_video;
 
-  if (picturePath?.length) {
+  if (picturePath) {
     if (pictureId) {
       await cloudinary.uploader.destroy(pictureId);
     }
-    const cloudUpload = await cloudinary.uploader.upload(picturePath[0]);
-    picturePath = cloudUpload.secure_url;
-    pictureId = cloudUpload.public_id;
+    const cloudUpload = await cloudinary.uploader.upload(picturePath);
+    picturePath = cloudUpload?.secure_url;
+    pictureId = cloudUpload?.public_id;
   }
+
+  title = title || recipeData?.title;
+  ingredients = ingredients || recipeData?.ingredients;
+  picturePath = picturePath || recipeData?.recipe_picture;
 
   await editRecipeModel({
     id,
