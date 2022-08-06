@@ -39,7 +39,7 @@ const getUsers = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const dataDetailUser = await getUserProfileModel(req.body.id);
+  const dataDetailUser = await getUserProfileModel(req.params.id);
   res.send(dataDetailUser);
 };
 
