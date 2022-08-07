@@ -56,7 +56,9 @@ const getRecipeDetailModel = requestData => {
     db.query(`SELECT user_profile.name AS author,user_profile.user_id , recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at
         FROM recipes 
         JOIN user_profile ON recipes.user_id = user_profile.user_id
-        WHERE id = $1`, [requestData], (error, result) => {
+        WHERE id = $1`,
+    [requestData],
+    (error, result) => {
       if (!error) {
         db.query(
               `SELECT user_profile.user_id, user_profile.name, user_profile.profile_picture, comment.comment FROM comment
@@ -91,11 +93,16 @@ const newAddedRecipeModel = () => {
 
 const deleteRecipeModel = requestData => {
   return new Promise((resolve, reject) => {
-    db.query('DELETE FROM recipes WHERE id=$1',
+    db.query('DELETE FROM comment WHERE recipe_id=$1',
       [requestData],
       (error, result) => {
         if (error) return reject(error);
-        resolve(result);
+        db.query('DELETE FROM recipes WHERE id=$1',
+          [requestData],
+          (_error, _result) => {
+            if (_error) return reject(_error);
+            resolve(result);
+          });
       });
   });
 };
