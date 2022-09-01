@@ -1,13 +1,16 @@
 const express = require('express');
 const helmet = require('helmet');
-
+const restify = require('restify');
+const xss = require('xss-clean');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+const appXSS = restify.createServer();
 const app = express();
 const port = process.env.PORT || process.env.LOCAL_PORT;
 
 // Server Add-on
+appXSS.use(restify.bodyParser());
 app.use(
   helmet({
     crossOriginResourcePolicy: false
@@ -37,6 +40,7 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 // Routes Declaration
+appXSS.use(xss());
 app.use('/public/images', express.static('public/images'));
 app.use('/public/videos', express.static('public/videos'));
 const usersRoutes = require('./routes/usersRoutes');
