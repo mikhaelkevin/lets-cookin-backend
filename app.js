@@ -13,11 +13,10 @@ app.use(bodyParser.json());
 
 // Middleware Declaration
 const { errorHandler } = require('./app/middlewares/errorHandler');
-// const cors = require('./app/middlewares/cors');
 const cors = require('cors');
 
 const allowlist = [
-  'https://letscookin-app.web.app/',
+  'https://letscookin-app.web.app',
   'http://localhost:3001',
   'http://localhost:3000',
   'https://next-letscookin-apps.vercel.app'
