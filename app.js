@@ -8,9 +8,11 @@ const app = express();
 const port = process.env.PORT || process.env.LOCAL_PORT;
 
 // Server Add-on
-app.use(helmet({
-  crossOriginResourcePolicy: false
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false
+  })
+);
 app.use(bodyParser.json());
 
 // Middleware Declaration
@@ -18,7 +20,12 @@ const { errorHandler } = require('./app/middlewares/errorHandler');
 // const cors = require('./app/middlewares/cors');
 const cors = require('cors');
 
-const allowlist = ['https://letscookin-app.web.app', 'http://localhost:3001'];
+const allowlist = [
+  'https://letscookin-app.web.app',
+  'http://localhost:3001',
+  'http://localhost:3000',
+  'https://next-letscookin-apps.vercel.app'
+];
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {

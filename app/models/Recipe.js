@@ -43,7 +43,8 @@ const getRecipeByIdModel = requestData => {
           recipe_picture: result.rows[0].recipe_picture,
           recipe_video: result.rows[0].recipe_video,
           user_id: result.rows[0].user_id,
-          created_at: result.rows[0].created_at
+          created_at: result.rows[0].created_at,
+          pictureId: result.rows[0].recipe_picture_id
         };
         resolve(newRecipeData);
       });
@@ -55,7 +56,9 @@ const getRecipeDetailModel = requestData => {
     db.query(`SELECT user_profile.name AS author,user_profile.user_id , recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at
         FROM recipes 
         JOIN user_profile ON recipes.user_id = user_profile.user_id
-        WHERE id = $1`, [requestData], (error, result) => {
+        WHERE id = $1`,
+    [requestData],
+    (error, result) => {
       if (!error) {
         db.query(
               `SELECT user_profile.user_id, user_profile.name, user_profile.profile_picture, comment.comment FROM comment
@@ -90,11 +93,16 @@ const newAddedRecipeModel = () => {
 
 const deleteRecipeModel = requestData => {
   return new Promise((resolve, reject) => {
-    db.query('DELETE FROM recipes WHERE id=$1',
+    db.query('DELETE FROM comment WHERE recipe_id=$1',
       [requestData],
       (error, result) => {
         if (error) return reject(error);
-        resolve(result);
+        db.query('DELETE FROM recipes WHERE id=$1',
+          [requestData],
+          (_error, _result) => {
+            if (_error) return reject(_error);
+            resolve(result);
+          });
       });
   });
 };
@@ -103,9 +111,9 @@ const editRecipeModel = requestData => {
   console.log('requestData', requestData);
   return new Promise((resolve, reject) => {
     db.query(`UPDATE recipes 
-    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4 
-    WHERE id =$5`,
-    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.id],
+    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4, recipe_picture_id=$5
+    WHERE id =$6`,
+    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.pictureId, requestData.id],
     (error, result) => {
       if (error) return reject(error);
       resolve(result.rows);
