@@ -40,7 +40,6 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 // Routes Declaration
-appXSS.use(xss());
 app.use('/public/images', express.static('public/images'));
 app.use('/public/videos', express.static('public/videos'));
 const usersRoutes = require('./routes/usersRoutes');
@@ -48,9 +47,10 @@ const recipesRoutes = require('./routes/recipesRoutes');
 const authRoutes = require('./routes/auth');
 
 // Routes Endpoint
+appXSS.use(xss());
 app.use('/letscookinapps/', cors(corsOptionsDelegate), usersRoutes);
 app.use('/letscookinapps/', cors(corsOptionsDelegate), recipesRoutes);
-app.use('/letscookinapps/', authRoutes);
+app.use('/letscookinapps/', cors(corsOptionsDelegate), authRoutes);
 
 // app.use('*', (req, res) => {
 //   res.send('Sukses');
