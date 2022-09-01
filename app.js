@@ -11,11 +11,7 @@ const port = process.env.PORT || process.env.LOCAL_PORT;
 
 // Server Add-on
 appXSS.use(restify.bodyParser());
-app.use(
-  helmet({
-    crossOriginResourcePolicy: false
-  })
-);
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(bodyParser.json());
 
 // Middleware Declaration
