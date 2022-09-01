@@ -126,7 +126,8 @@ const searchByNameModel = requestData => {
     db.query(`SELECT user_profile.name,recipes.id, recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at
     FROM recipes 
     JOIN user_profile ON recipes.user_id = user_profile.user_id
-    WHERE LOWER(title) LIKE $1`,
+    WHERE LOWER(title) LIKE $1
+    ORDER BY recipes.title ASC`,
     ['%' + requestData + '%'],
     (error, result) => {
       if (error) return reject(error);
