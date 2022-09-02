@@ -52,13 +52,15 @@ const addRecipe = async (req, res) => {
 };
 
 const getRecipes = async (req, res) => {
+  let { sortType } = req?.query;
   const page = req?.query?.page || 1;
   const limit = req?.query?.limit || null;
   const offset = limit * page - limit;
 
+  if (!sortType) sortType = 'DESC';
   if (page && page <= 0) throw new ErrorResponse('Page must be more than 0');
 
-  const recipesData = await getAllRecipesModel({ limit, offset });
+  const recipesData = await getAllRecipesModel({ limit, offset, sortType });
   res.status(200).send(recipesData);
 };
 
