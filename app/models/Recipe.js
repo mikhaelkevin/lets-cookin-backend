@@ -18,9 +18,9 @@ const getAllRecipesModel = requestData => {
   return new Promise((resolve, reject) => {
     db.query(`SELECT user_profile.name AS author, recipes.id, recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at FROM recipes
         JOIN user_profile ON recipes.user_id = user_profile.user_id
-        ORDER BY recipes.id
+        ORDER BY recipes.title ${requestData?.sortType}
         LIMIT $1 OFFSET $2`,
-    [requestData.limit, requestData.offset],
+    [requestData?.limit, requestData?.offset],
     (error, result) => {
       if (error) return reject(error);
       if (result.rows.length <= 0) return reject(new ErrorResponse("Couldn't get recipes data", 404));
