@@ -2,11 +2,11 @@ const db = require('../../configs/database');
 const { ErrorResponse } = require('../../utils/errorResponse');
 
 const addRecipeModel = (requestData) => {
-  const { requestDataText: { title, ingredients, userId }, picturePath, videoPath, createdAt } = requestData;
+  const { requestDataText: { title, ingredients, userId }, picturePath, videoPath, createdAt, pictureId } = requestData;
 
   return new Promise((resolve, reject) => {
-    db.query('INSERT INTO recipes(title,ingredients, recipe_picture , recipe_video, user_id, created_at) VALUES($1, $2, $3, $4, $5, $6) RETURNING title',
-      [title, ingredients, picturePath, videoPath, userId, createdAt],
+    db.query('INSERT INTO recipes(title,ingredients, recipe_picture , recipe_video, user_id, created_at, recipe_picture_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING title',
+      [title, ingredients, picturePath, videoPath, userId, createdAt, pictureId],
       (error, result) => {
         if (error) return reject(error);
         resolve(result.rows.length);
@@ -18,9 +18,9 @@ const getAllRecipesModel = requestData => {
   return new Promise((resolve, reject) => {
     db.query(`SELECT user_profile.name AS author, recipes.id, recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at FROM recipes
         JOIN user_profile ON recipes.user_id = user_profile.user_id
-        ORDER BY recipes.id
+        ORDER BY recipes.title ${requestData?.sortType}
         LIMIT $1 OFFSET $2`,
-    [requestData.limit, requestData.offset],
+    [requestData?.limit, requestData?.offset],
     (error, result) => {
       if (error) return reject(error);
       if (result.rows.length <= 0) return reject(new ErrorResponse("Couldn't get recipes data", 404));
@@ -43,7 +43,8 @@ const getRecipeByIdModel = requestData => {
           recipe_picture: result.rows[0].recipe_picture,
           recipe_video: result.rows[0].recipe_video,
           user_id: result.rows[0].user_id,
-          created_at: result.rows[0].created_at
+          created_at: result.rows[0].created_at,
+          pictureId: result.rows[0].recipe_picture_id
         };
         resolve(newRecipeData);
       });
@@ -55,12 +56,15 @@ const getRecipeDetailModel = requestData => {
     db.query(`SELECT user_profile.name AS author,user_profile.user_id , recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at
         FROM recipes 
         JOIN user_profile ON recipes.user_id = user_profile.user_id
-        WHERE id = $1`, [requestData], (error, result) => {
+        WHERE id = $1`,
+    [requestData],
+    (error, result) => {
       if (!error) {
         db.query(
               `SELECT user_profile.user_id, user_profile.name, user_profile.profile_picture, comment.comment FROM comment
               JOIN user_profile ON comment.user_id = user_profile.user_id
-              WHERE comment.recipe_id = $1`,
+              WHERE comment.recipe_id = $1
+              ORDER BY comment.created_at DESC`,
               [requestData],
               (_error, _result) => {
                 if (!_error) {
@@ -89,11 +93,16 @@ const newAddedRecipeModel = () => {
 
 const deleteRecipeModel = requestData => {
   return new Promise((resolve, reject) => {
-    db.query('DELETE FROM recipes WHERE id=$1',
+    db.query('DELETE FROM comment WHERE recipe_id=$1',
       [requestData],
       (error, result) => {
         if (error) return reject(error);
-        resolve(result);
+        db.query('DELETE FROM recipes WHERE id=$1',
+          [requestData],
+          (_error, _result) => {
+            if (_error) return reject(_error);
+            resolve(result);
+          });
       });
   });
 };
@@ -102,9 +111,9 @@ const editRecipeModel = requestData => {
   console.log('requestData', requestData);
   return new Promise((resolve, reject) => {
     db.query(`UPDATE recipes 
-    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4 
-    WHERE id =$5`,
-    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.id],
+    SET title=$1, ingredients=$2, recipe_picture=$3, recipe_video=$4, recipe_picture_id=$5
+    WHERE id =$6`,
+    [requestData.title, requestData.ingredients, requestData.picturePath, requestData.videoPath, requestData.pictureId, requestData.id],
     (error, result) => {
       if (error) return reject(error);
       resolve(result.rows);
@@ -117,7 +126,8 @@ const searchByNameModel = requestData => {
     db.query(`SELECT user_profile.name,recipes.id, recipes.title, recipes.ingredients, recipes.recipe_picture, recipes.recipe_video, recipes.created_at
     FROM recipes 
     JOIN user_profile ON recipes.user_id = user_profile.user_id
-    WHERE LOWER(title) LIKE $1`,
+    WHERE LOWER(title) LIKE $1
+    ORDER BY recipes.title ASC`,
     ['%' + requestData + '%'],
     (error, result) => {
       if (error) return reject(error);

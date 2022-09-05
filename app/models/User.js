@@ -98,10 +98,10 @@ const editUserModel = requestData => {
   return new Promise((resolve, reject) => {
     db.query(`WITH updateOnUsers AS
     (UPDATE users SET email=$1 WHERE id=$2 RETURNING id)
-    UPDATE user_profile SET name=$3, phonenumber=$4, profile_picture=$5
+    UPDATE user_profile SET name=$3, phonenumber=$4, profile_picture=$5, profile_picture_id=$6
     WHERE user_id in (SELECT id FROM updateOnUsers)
     RETURNING name`,
-    [requestData.email, requestData.id, requestData.name, requestData.phoneNumber, requestData.profilePicture],
+    [requestData.email, requestData.id, requestData.name, requestData.phoneNumber, requestData.profilePicturePath, requestData.profilePictureId],
     (error, result) => {
       if (error) return reject(error);
       resolve(result.rows.length);
