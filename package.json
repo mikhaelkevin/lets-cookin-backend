@@ -14,7 +14,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.4",
     "eslint-plugin-promise": "^6.0.0",
-    "nodemon": "^2.0.18"
+    "nodemon": "^2.0.19"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
